@@ -1,20 +1,38 @@
 const board = document.getElementById('gameBoard');
 const startBtn = document.getElementById('startBtn');
 const timerDisplay = document.getElementById('timer');
+const scoreDisplay = document.getElementById('score');
 
 let currentLevel = 1;
 let timeLeft;
 let gameTimer;
 let firstCard = null;
 let lockBoard = false;
+let score = 0;
+
+// Звуки
+const flipSound = new Audio('https://freesound.org/data/previews/191/191688_2436901-lq.mp3');
+const matchSound = new Audio('https://freesound.org/data/previews/171/171671_2436901-lq.mp3');
+const levelSound = new Audio('https://freesound.org/data/previews/320/320934_2436901-lq.mp3');
 
 const levels = {
-    1: { rows: 2, cols: 3, time: 10 }, 
-    2: { rows: 3, cols: 4, time: 20 }, 
-    3: { rows: 4, cols: 6, time: 90 }  
+    1: { rows: 2, cols: 3, time: 10 }, // 10 секунд
+    2: { rows: 3, cols: 4, time: 20 }, // 20 секунд
+    3: { rows: 4, cols: 6, time: 90 }  // 1 хвилина 30 секунд
 };
 
-const emojis = ['🎲', '🧩', '🎯', '🃏', '♟️', '🎮', '👾', '🕹️', '📦', '🧠', '⚔️', '🚀'];
+async function loadCards() {
+    try {
+        const response = await fetch('cards.json');
+        if (!response.ok) throw new Error('Не вдалося завантажити cards.json');
+        const data = await response.json();
+        return data.map(item => item.emoji);
+    } catch (error) {
+        console.error('Помилка завантаження JSON:', error);
+        // Резервні дані
+        return ['🎲', '🧩', '🎯', '🃏', '♟️', '🎮', '👾', '🕹️', '📦', '🧠', '⚔️', '🚀'];
+    }
+}
 
 startBtn.addEventListener('click', () => {
     resetGame();
@@ -42,13 +60,13 @@ function updateTimerDisplay() {
     timerDisplay.textContent = `${mins}:${secs}`;
 }
 
-function setupGame() {
+async function setupGame() {
     const level = levels[currentLevel];
     board.innerHTML = '';
     board.style.gridTemplateColumns = `repeat(${level.cols}, 1fr)`;
 
     const pairs = (level.rows * level.cols) / 2;
-    const chosen = shuffle([...emojis].slice(0, pairs));
+    const chosen = shuffle(await loadCards()).slice(0, pairs);
     const cardsArray = shuffle([...chosen, ...chosen]);
 
     cardsArray.forEach(emoji => {
@@ -68,6 +86,7 @@ function onCardClick() {
 
     this.textContent = this.dataset.emoji;
     this.classList.add('revealed');
+    flipSound.play().catch(() => console.log('Звук не відтворився'));
 
     if (!firstCard) {
         firstCard = this;
@@ -75,6 +94,9 @@ function onCardClick() {
         if (firstCard.dataset.emoji === this.dataset.emoji) {
             firstCard.classList.add('matched');
             this.classList.add('matched');
+            score += timeLeft * 10; // Бали за збіг залежно від залишеного часу
+            scoreDisplay.textContent = `Бали: ${score}`;
+            matchSound.play().catch(() => console.log('Звук не відтворився'));
             firstCard = null;
             checkWin();
         } else {
@@ -95,16 +117,19 @@ function checkWin() {
     const unmatched = document.querySelectorAll('.card:not(.matched)');
     if (unmatched.length === 0) {
         clearInterval(gameTimer);
+        score += timeLeft * 50; // Бонус за завершення рівня
+        scoreDisplay.textContent = `Бали: ${score}`;
+        levelSound.play().catch(() => console.log('Звук не відтворився'));
         if (currentLevel < Object.keys(levels).length) {
             currentLevel++;
             setTimeout(() => {
-                alert(`Вітаємо! Ви перейшли на рівень ${currentLevel}.`);
+                alert(`Вітаємо! Ви перейшли на рівень ${currentLevel}. Ваші бали: ${score}`);
                 setupGame();
                 startTimer();
             }, 500);
         } else {
             setTimeout(() => {
-                alert(`Вітаємо! Ви пройшли всі рівні! Ваш промокод: GAMEBOX2025`);
+                alert(`Вітаємо! Ви пройшли всі рівні! Ваші бали: ${score}. Промокод: GAMEBOX2025`);
                 resetGame();
             }, 500);
         }
@@ -113,6 +138,8 @@ function checkWin() {
 
 function resetGame() {
     currentLevel = 1;
+    score = 0;
+    scoreDisplay.textContent = `Бали: ${score}`;
     board.innerHTML = '';
     timerDisplay.textContent = '00:00';
     clearInterval(gameTimer);
