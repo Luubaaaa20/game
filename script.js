@@ -11,9 +11,9 @@ let lockBoard = false;
 let score = 0;
 
 // Звуки
-const flipSound = new Audio('https://freesound.org/data/previews/191/191688_2436901-lq.mp3');
-const matchSound = new Audio('https://freesound.org/data/previews/171/171671_2436901-lq.mp3');
-const levelSound = new Audio('https://freesound.org/data/previews/320/320934_2436901-lq.mp3');
+const flipSound = new Audio('sounds/560043__andrussy44__book_flip1.wav'); // Переворот картки
+const matchSound = new Audio('sounds/386200__ldezem__match-lighting-short.wav'); // Збіг пари
+const levelSound = new Audio('sounds/787559__interstellarcat__video-game-level-complete-sound-effect.wav'); // Завершення рівня
 
 const levels = {
     1: { rows: 2, cols: 3, time: 10 }, // 10 секунд
