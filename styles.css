@@ -45,9 +45,15 @@ header h1 {
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-#timer {
+.controls button:hover {
+    background-color: #00ffcc;
+    color: #000;
+}
+
+#timer, #score {
     font-size: 0.9rem;
     margin-left: 10px;
     color: #ff4081;
@@ -55,7 +61,7 @@ header h1 {
 
 .game-board {
     display: grid;
-    gap: 10px;
+    gap: 15px;
     justify-content: center;
     margin-top: 20px;
 }
@@ -70,15 +76,18 @@ header h1 {
     align-items: center;
     font-size: 2rem;
     cursor: pointer;
-    transition: transforma: 0.3s;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
 }
 
 .card.revealed {
+    transform: rotateY(180deg);
     background-color: #00ffcc;
     color: #000;
 }
 
 .card.matched {
+    transform: rotateY(180deg);
     background-color: #4caf50;
     color: #000;
     cursor: default;
@@ -90,10 +99,79 @@ footer {
     color: #888;
 }
 
-@media (max-width: 768px) {
+footer a {
+    color: #00ffcc;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Адаптивність */
+@media (max-width: 576px) {
+    .card {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    .game-board {
+        gap: 5px;
+    }
+    header h1 {
+        font-size: 1.2rem;
+    }
+    .controls button, #timer, #score {
+        font-size: 0.7rem;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
     .card {
         width: 60px;
         height: 60px;
         font-size: 1.5rem;
+    }
+    .game-board {
+        gap: 8px;
+    }
+    header h1 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .card {
+        width: 70px;
+        height: 70px;
+        font-size: 1.8rem;
+    }
+    .game-board {
+        gap: 10px;
+    }
+    header h1 {
+        font-size: 1.4rem;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .card {
+        width: 75px;
+        height: 75px;
+        font-size: 1.9rem;
+    }
+    .game-board {
+        gap: 12px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .card {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+    }
+    .game-board {
+        gap: 15px;
     }
 }
