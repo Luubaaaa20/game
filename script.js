@@ -9,9 +9,9 @@ let firstCard = null;
 let lockBoard = false;
 
 const levels = {
-    1: { rows: 2, cols: 3, time: 10 }, // 10 секунд
-    2: { rows: 3, cols: 4, time: 20 }, // 20 секунд
-    3: { rows: 4, cols: 6, time: 90 }  // 1 хвилина 30 секунд
+    1: { rows: 2, cols: 3, time: 10 }, 
+    2: { rows: 3, cols: 4, time: 20 }, 
+    3: { rows: 4, cols: 6, time: 90 }  
 };
 
 const emojis = ['🎲', '🧩', '🎯', '🃏', '♟️', '🎮', '👾', '🕹️', '📦', '🧠', '⚔️', '🚀'];
