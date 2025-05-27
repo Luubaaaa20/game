@@ -10,7 +10,7 @@ let firstCard = null;
 let lockBoard = false;
 let score = 0;
 
-// Звуки
+// Звуки (локальні файли)
 const flipSound = new Audio('sounds/560043__andrussy44__book_flip1.wav'); // Переворот картки
 const matchSound = new Audio('sounds/386200__ldezem__match-lighting-short.wav'); // Збіг пари
 const levelSound = new Audio('sounds/787559__interstellarcat__video-game-level-complete-sound-effect.wav'); // Завершення рівня
@@ -86,7 +86,7 @@ function onCardClick() {
 
     this.textContent = this.dataset.emoji;
     this.classList.add('revealed');
-    flipSound.play().catch(() => console.log('Звук не відтворився'));
+    flipSound.play().catch(() => console.log('Звук перевороту не відтворився'));
 
     if (!firstCard) {
         firstCard = this;
@@ -94,9 +94,9 @@ function onCardClick() {
         if (firstCard.dataset.emoji === this.dataset.emoji) {
             firstCard.classList.add('matched');
             this.classList.add('matched');
-            score += timeLeft * 10; // Бали за збіг залежно від залишеного часу
+            score += timeLeft * 10; // Бали за збіг
             scoreDisplay.textContent = `Бали: ${score}`;
-            matchSound.play().catch(() => console.log('Звук не відтворився'));
+            matchSound.play().catch(() => console.log('Звук збігу не відтворився'));
             firstCard = null;
             checkWin();
         } else {
@@ -119,7 +119,7 @@ function checkWin() {
         clearInterval(gameTimer);
         score += timeLeft * 50; // Бонус за завершення рівня
         scoreDisplay.textContent = `Бали: ${score}`;
-        levelSound.play().catch(() => console.log('Звук не відтворився'));
+        levelSound.play().catch(() => console.log('Звук рівня не відтворився'));
         if (currentLevel < Object.keys(levels).length) {
             currentLevel++;
             setTimeout(() => {
